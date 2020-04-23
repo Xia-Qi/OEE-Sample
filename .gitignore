@@ -1,0 +1,15 @@
+
+.vs/
+packages/
+OOEShow/bin/
+OOEShow/obj/
+OOEShow/Web.Debug.config
+OOEShow/Web.Release.config
+Acme.Core.Basic/bin/
+Acme.Core.Basic/obj/
+Acme.Core.Basic/Migrations/
+!/Acme.Core.Basic/Migrations/Configuration.cs
+Acme.Core.EquipmentManagement/bin/
+Acme.Core.EquipmentManagement/obj/
+Acme.Core.EquipmentManagement/Migrations/
+!/Acme.Core.EquipmentManagement/Migrations/Configuration.cs

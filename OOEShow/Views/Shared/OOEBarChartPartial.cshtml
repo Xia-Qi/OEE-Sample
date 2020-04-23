@@ -1,0 +1,53 @@
+﻿@model IList<OOEShow.Models.OOEChartData>
+
+@Html.DevExpress().Chart(settings =>
+{
+    settings.Name = "OEEChart";
+    settings.Width = 1000;
+    settings.Height = 1500;
+    settings.PaletteName = "Office";
+    settings.RenderFormat = DevExpress.XtraCharts.Web.RenderFormat.Svg;
+    settings.BorderOptions.Visibility = DefaultBoolean.False;
+    //settings.CrosshairEnabled = options.ShowLabels ? DefaultBoolean.False : DefaultBoolean.True;
+    settings.CrosshairEnabled = DefaultBoolean.True;
+    settings.SaveStateOnCallbacks = true;
+    settings.CallbackRouteValues = new { controller = "Home", action = "OOEBarChartPartial" };
+    //settings.ClientSideEvents.BeginCallback = "OnBeginCallback";
+
+    settings.Legends.Default(l =>
+    {
+        l.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+        l.MarkerMode = LegendMarkerMode.CheckBox;
+    });
+
+    settings.Series.Template(t =>
+    {
+        t.Views().SideBySideBarSeriesView(v =>
+        {
+            v.SeriesLabel(l =>
+            {
+                l.Position = BarSeriesLabelPosition.Auto;//options.LabelPosition;
+                l.TextOrientation = TextOrientation.Horizontal;//options.TextOrientation;
+                //l.Indent = options.LabelIndent;
+                l.ResolveOverlappingMode = ResolveOverlappingMode.Default;
+            });
+        });
+        t.SetDataMembers("EquipmentName","Value");//x and y
+        //t.LabelsVisibility = options.ShowLabels ? DefaultBoolean.True : DefaultBoolean.False;
+        t.LabelsVisibility = DefaultBoolean.True;
+    });
+
+    settings.XYDiagram(d =>
+    {
+        d.Rotated = true;
+        d.AxisY.Interlaced = true;
+        d.AxisY.Title.Text = "";
+        d.AxisY.Title.Visibility = DefaultBoolean.True;
+    });
+
+    settings.Titles.Add(new ChartTitle()
+    {
+        Font = new Font("Tahoma", 18),
+        Text = "全局设备效率图表"
+    });
+}).Bind(Model, seriesDataMember: "TypeName").GetHtml()

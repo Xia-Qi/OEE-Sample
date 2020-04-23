@@ -1,0 +1,126 @@
+﻿@model IEnumerable
+@{
+    ViewBag.Title = "OOE Show";
+}
+@*<script type="text/javascript">
+    var timeout;
+    function scheduleGridUpdate(grid) {
+        window.clearTimeout(timeout);
+        timeout = window.setTimeout(
+            function () { grid.Refresh(); },
+            2000
+        );
+    }
+    function grid_Init(s, e) {
+        scheduleGridUpdate(s);
+    }
+    function grid_BeginCallback(s, e) {
+        window.clearTimeout(timeout);
+    }
+    function grid_EndCallback(s, e) {
+        scheduleGridUpdate(s);
+    }
+    </script>*@
+<script>
+    window.onload = function () {
+
+    }
+    //function DateOnChange(s,e) {
+
+    //}
+
+    //1）	用户打开时间控件时，显示当天时间，用户选择需要查询的日期后，点击“全局设备效率计算”按钮进行查询操作，系统从数据库中获取数据并在表格展示区中展示产线上设备综合效率列表，在图形展示区中显示设备综合效率柱状图。
+    function ShowData(s, e) {
+        //alert(location.href);
+        //alert(document.getElementsByName("DateSelect")[0].value);
+        //debugger;
+        var oldUrl = location.href;
+        var newUrl = oldUrl.split('?')[0] + "?t=" + document.getElementsByName("DateSelect")[0].value.replace("年", "-").replace("月", "-").replace("日", "");
+        //var newUrl = oldUrl + "?t=" + document.getElementsByName("DateSelect")[0].value;
+        //alert(newUrl);
+        location.replace(newUrl);
+        
+    }
+
+    //2）	用户通过点击“显示/隐藏数据表格”按钮，显示或隐藏设备综合效率表格
+    function GridShowHide(s, e) {
+        document.getElementById("grid").style.display = (document.getElementById("grid").style.display == 'none' ? '' : 'none');
+    }
+
+    //3）	用户通过点击“导出数据/打印”将当前表格数据导出到Excel文件中。
+    function ExportGrid(s, e) {
+
+    }
+</script>
+<div id="btnArea" style="padding:5px;margin-top:20px;vertical-align:middle;background-color:#f7f3f3">
+    @*<div style="display:inline-block;">*@
+        时间：
+        @Html.DevExpress().DateEdit(
+            settings =>
+            {
+                settings.Name = "DateSelect";
+                settings.Properties.DisplayFormatString = "D";
+                settings.Date = string.IsNullOrEmpty(Request.QueryString.Get("t")) == false ? DateTime.Parse(Request.QueryString.Get("t")) : DateTime.Now;
+                settings.Style.Add("display", "inline-table");
+                settings.Height = 30;
+                //settings.Style.Add("margin", "5px 10px 5px 0");
+                //settings.Properties.ClientSideEvents.DateChanged = "DateOnChange";
+            }
+        ).GetHtml()
+        @Html.DevExpress().Button(
+        settings =>
+        {
+            settings.Name = "btn_showData";
+            settings.Style.Add("display", "inline-block");
+            settings.Text = "全局设备效率计算";
+            settings.Styles.Native = true;
+            settings.Height = 30;
+            settings.Style.Add("margin", "5px 10px 5px 0");
+            settings.ClientSideEvents.Click = "ShowData";
+        }
+    ).GetHtml()
+    @*</div>
+    <div style="display:inline-block;">*@
+        @Html.DevExpress().Button(
+        settings =>
+        {
+            settings.Name = "btn_gridShowHide";
+            settings.Style.Add("display", "inline-block");
+            settings.Text = "显示/隐藏数据表格";
+            settings.Styles.Native = true;
+            settings.Height = 30;
+            settings.Style.Add("margin", "5px 10px 5px 45px");
+            settings.ClientSideEvents.Click = "GridShowHide";
+        }
+    ).GetHtml()
+
+        @Html.DevExpress().Button(
+            settings =>
+            {
+                settings.Name = "btn_exportGrid";
+                settings.Style.Add("display", "inline-block");
+                settings.Text = "导出数据/打印";
+                settings.Styles.Native = true;
+                //settings.ClientSideEvents.Click = "ExportGrid"; //设置按钮点击事件
+                settings.UseSubmitBehavior = false;
+                settings.Height = 30;
+                settings.Style.Add("margin", "5px 10px 5px 0");
+                settings.RouteValues = new { Controller = "Home", Action = "ExportTo" };
+            }
+        ).GetHtml()
+    @*</div>*@
+
+    
+
+    
+</div>
+<div id="grid">
+    @using (Html.BeginForm())
+    {
+        @Html.Partial("~/Views/Shared/OEEGridPartial.cshtml", Model)
+    }
+</div>
+<div id="chart" style="border: solid 1px">
+    @Html.Partial("~/Views/Shared/OOEBarChartPartial.cshtml", (List<OOEShow.Models.OOEChartData>)ViewBag.GridData)
+</div>
+
