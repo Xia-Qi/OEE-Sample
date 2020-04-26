@@ -13,3 +13,5 @@ Acme.Core.EquipmentManagement/bin/
 Acme.Core.EquipmentManagement/obj/
 Acme.Core.EquipmentManagement/Migrations/
 !/Acme.Core.EquipmentManagement/Migrations/Configuration.cs
+OEEShow.Winform/bin/
+OEEShow.Winform/obj/
